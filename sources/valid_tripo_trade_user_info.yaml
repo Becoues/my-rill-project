@@ -1,0 +1,23 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 8 * * *'   
+sql: |
+  SELECT 
+    id,
+    email,
+    status,
+    CAST(create_time AS timestamp(3)) as create_time,
+    api_count,
+    web_task_count,
+    CAST(web_last_create_time AS timestamp(3)) as web_last_create_time,
+    "domain",
+    web_balance,
+    web_frozen,
+    api_balance,
+    api_frozen,
+    pt,
+    CAST(updated_at AS timestamp(3)) as updated_at
+  FROM silver.valid_tripo_trade_user_info
+       WHERE cast(date_parse(pt,'%Y%m%d')as date)  >= DATE_ADD('month', -2, CURRENT_DATE)

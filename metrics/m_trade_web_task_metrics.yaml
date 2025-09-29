@@ -1,0 +1,79 @@
+version: 1
+type: metrics_view
+
+display_name: Web Tasks Metrics
+model: m_trade_web_task
+timeseries: create_time
+
+
+dimensions:
+  - label: Task Id
+    column: task_id
+    description: ""
+  - label: Email
+    column: email
+    description: ""
+  - label: Status
+    column: status
+    description: ""
+  - label: Type
+    column: type
+    description: ""
+  - label: 运行时间
+    column: running_time
+    description: ""
+  - label: 排队时间
+    column: pending_time
+    description: ""
+  - label: Domain
+    column: domain
+    description: ""
+  - label: Error Code
+    column: error_code
+    description: ""
+  - label: Error Message
+    column: error_message
+    description: ""
+  - label: Fail Info
+    column: fail_info
+    description: ""
+  - label: Model Version
+    column: model_version
+    description: ""
+measures:
+  - name: total_records
+    label: 总数
+    expression: COUNT(*)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: true
+  - name: total_users
+    label: 用户数
+    expression: COUNT(DISTINCT email)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: false
+  - name: avg_running_time
+    label: 平均运行时间
+    expression: AVG(running_time)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: false
+  - name: max_running_time
+    label: 最大运行时间
+    expression: MAX(running_time)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: false
+  - name: avg_pending_time
+    label: 平均排队时间
+    expression: AVG(pending_time)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: false
+  - name: max_pending_time
+    label: 最大排队时间
+    expression: MAX(pending_time)
+    description: ""
+    format_preset: humanize
+    valid_percent_of_total: false

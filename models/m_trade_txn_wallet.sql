@@ -1,0 +1,1 @@
+select * from valid_tripo_trade_txn_wallet

@@ -1,0 +1,10 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "Transaction Wallet Metrics dashboard"
+metrics_view: m_trade_txn_wallet_metrics
+
+dimensions: '*'
+measures: '*'

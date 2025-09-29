@@ -1,0 +1,42 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 8 * * *'    
+sql: |
+  SELECT 
+    pt,
+    distinct_id,
+    CAST(DATE_PARSE(CAST(event_date AS VARCHAR), '%Y-%m-%d') AS timestamp(3)) as event_date,
+    CAST(signup_date AS VARCHAR) as signup_date, 
+    signup_primary_channel,
+    signup_secondary_channel,
+    signup_third_channel,
+    signup_fourth_channel,
+    country,
+    signup_device_type,
+    is_new,
+    is_active,
+    is_generate_model,
+    generate_times,
+    is_generate_model_by_3_0,
+    generate_times_by_3_0,
+    is_export_model,
+    export_times,
+    is_enter_pricing,
+    is_enter_payment_page,
+    payer_type,
+    is_ever_payment_user,
+    subscription_times,
+    credit_payment_times,
+    retention_1d,
+    retention_7d,
+    retention_14d,
+    retention_30d,
+    CAST(updated_at AS timestamp(3)) as updated_at,
+    is_registed,
+    user_type,
+    signup_date_be,
+    user_type_be
+  FROM gold.tripo_user_activity_info
+  WHERE cast(date_parse(pt,'%Y%m%d')as date)  >= DATE_ADD('month', -12, CURRENT_DATE)

@@ -1,0 +1,82 @@
+version: 1
+type: metrics_view
+
+display_name: API Tasks Metrics
+model: m_trade_api_task
+timeseries: create_time
+
+dimensions:
+  - name: client_id
+    display_name: Client ID
+    column: client_id
+
+  - name: name
+    display_name: Task Name
+    column: name
+
+  - name: status
+    display_name: Status
+    column: status
+
+  - name: email
+    display_name: Email
+    column: email
+
+  - name: domain
+    display_name: Domain
+    column: "domain"
+
+  - name: pt
+    display_name: PT
+    column: pt
+
+measures:
+  - name: total_tasks
+    display_name: 总任务数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: total_clients
+    display_name: 客户数
+    expression: COUNT(DISTINCT client_id)
+    format_preset: humanize
+
+  - name: total_emails
+    display_name: 邮箱数
+    expression: COUNT(DISTINCT email)
+    format_preset: humanize
+
+  - name: total_domains
+    display_name: 域名数
+    expression: COUNT(DISTINCT "domain")
+    format_preset: humanize
+
+  - name: total_count
+    display_name: 总计数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: avg_running_time
+    display_name: 平均运行时间
+    expression: AVG(running_time)
+    format_preset: humanize
+
+  - name: max_running_time
+    display_name: 最大运行时间
+    expression: MAX(running_time)
+    format_preset: humanize
+
+  - name: avg_pending_time
+    display_name: 平均排队时间
+    expression: AVG(pending_time)
+    format_preset: humanize
+
+  - name: max_pending_time
+    display_name: 最大排队时间
+    expression: MAX(pending_time)
+    format_preset: humanize
+
+  - name: success_rate
+    display_name: 成功率
+    expression: SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) / COUNT(*) 
+    format_preset: percentage

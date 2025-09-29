@@ -1,0 +1,25 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 8 * * *'    
+sql: |
+  SELECT 
+    txn_id,
+    wallet_id,
+    amount,
+    extra,
+    CAST(create_time AS timestamp(3)) as create_time,
+    CAST(settle_time AS timestamp(3)) as settle_time,
+    wallet_type,
+    email,
+    "domain",
+    wallet_sub_type,
+    direction,
+    type,
+    status,
+    pt,
+    CAST(updated_at AS timestamp(3)) as updated_at
+  FROM silver.valid_tripo_trade_txn_wallet
+      WHERE cast(date_parse(pt,'%Y%m%d')as date)  >= DATE_ADD('month', -2, CURRENT_DATE)
+

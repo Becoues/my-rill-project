@@ -1,0 +1,99 @@
+version: 1
+type: metrics_view
+
+display_name: Transaction Wallet Metrics
+model: m_trade_txn_wallet
+timeseries: create_time
+
+dimensions:
+  - name: txn_id
+    display_name: Transaction ID
+    column: txn_id
+
+  - name: wallet_id
+    display_name: Wallet ID
+    column: wallet_id
+
+  - name: wallet_type
+    display_name: Wallet Type
+    column: wallet_type
+
+  - name: wallet_sub_type
+    display_name: Wallet Sub Type
+    column: wallet_sub_type
+
+  - name: direction
+    display_name: Direction
+    column: direction
+
+  - name: type
+    display_name: Type
+    column: type
+
+  - name: status
+    display_name: Status
+    column: status
+
+  - name: email
+    display_name: Email
+    column: email
+
+  - name: domain
+    display_name: Domain
+    column: "domain"
+
+  - name: pt
+    display_name: PT
+    column: pt
+
+measures:
+  - name: total_transactions
+    display_name: 总交易数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: total_wallets
+    display_name: 钱包数
+    expression: COUNT(DISTINCT wallet_id)
+    format_preset: humanize
+
+  - name: total_emails
+    display_name: 邮箱数
+    expression: COUNT(DISTINCT email)
+    format_preset: humanize
+
+  - name: total_domains
+    display_name: 域名数
+    expression: COUNT(DISTINCT "domain")
+    format_preset: humanize
+
+  - name: total_amount
+    display_name: 总交易金额
+    expression: SUM(amount)
+    format_preset: currency
+
+  - name: avg_amount
+    display_name: 平均交易金额
+    expression: AVG(amount)
+    format_preset: currency
+
+  - name: max_amount
+    display_name: 最大交易金额
+    expression: MAX(amount)
+    format_preset: currency
+
+  - name: min_amount
+    display_name: 最小交易金额
+    expression: MIN(amount)
+    format_preset: currency
+
+  - name: completed_transactions
+    display_name: 完成交易数
+    expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: failed_transactions
+    display_name: 失败交易数
+    expression: SUM(CASE WHEN status in ('失败', '取消','过期') THEN 1 ELSE 0 END)
+    format_preset: humanize
+
