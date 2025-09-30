@@ -77,16 +77,6 @@ measures:
     expression: AVG(amount)
     format_preset: currency
 
-  - name: max_amount
-    display_name: 最大交易金额
-    expression: MAX(amount)
-    format_preset: currency
-
-  - name: min_amount
-    display_name: 最小交易金额
-    expression: MIN(amount)
-    format_preset: currency
-
   - name: completed_transactions
     display_name: 完成交易数
     expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END)
@@ -97,3 +87,38 @@ measures:
     expression: SUM(CASE WHEN status in ('失败', '取消','过期') THEN 1 ELSE 0 END)
     format_preset: humanize
 
+# API充值钱包 - 消费金额
+  - name: api_wallet_consumption_amount
+    display_name: API充值钱包消费金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # API充值钱包 - 充值金额
+  - name: api_wallet_recharge_amount
+    display_name: API充值钱包充值金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # WEB免费钱包 - 消费金额
+  - name: web_free_wallet_consumption_amount
+    display_name: WEB免费钱包消费金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # WEB免费钱包 - 充值金额
+  - name: web_free_wallet_recharge_amount
+    display_name: WEB免费钱包充值金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # WEB订阅钱包 - 消费金额
+  - name: web_subscription_wallet_consumption_amount
+    display_name: WEB订阅钱包消费金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # WEB订阅钱包 - 充值金额
+  - name: web_subscription_wallet_recharge_amount
+    display_name: WEB订阅钱包充值金额
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency

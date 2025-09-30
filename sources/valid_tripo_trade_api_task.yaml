@@ -2,7 +2,7 @@ type: model
 materialize: true
 connector: athena
 refresh:
-  cron: '0 8 * * *'    
+  cron: '0 16 * * *'        
 sql: |
   SELECT 
     task_id,
