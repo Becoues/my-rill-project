@@ -26,6 +26,10 @@ dimensions:
     display_name: Domain
     column: "domain"
 
+  - name: type
+    display_name: type
+    column: "type"
+
   - name: pt
     display_name: PT
     column: pt

@@ -1,0 +1,45 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 16 * * *'
+sql: |
+  SELECT
+    -- 钱包侧字段
+    txn_id,
+    wallet_id,
+    amount,
+    CAST(create_time AS timestamp(3)) as create_time,
+    CAST(settle_time AS timestamp(3)) as settle_time,
+    extra,
+    wallet_type,
+    email,
+    domain,
+    wallet_sub_type,
+    direction,
+    txn_type,
+    status,
+    pt,
+    CAST(updated_at AS timestamp(3)) as updated_at,
+    task_id,
+    
+    -- 任务侧字段
+    task_status,
+    task_type,
+    client_id,
+    CAST(task_create_time AS timestamp(3)) as task_create_time,
+    CAST(start_time AS timestamp(3)) as start_time,
+    task_domain,
+    running_time,
+    pending_time,
+    model_version,
+    error_code,
+    error_message,
+    fail_info,
+    sub_id,
+    task_email,
+    CAST(task_updated_at AS timestamp(3)) as task_updated_at,
+    method_type
+  FROM gold.tripo_trade_user_wallet_task
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)
+

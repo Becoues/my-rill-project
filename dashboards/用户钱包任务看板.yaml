@@ -1,0 +1,14 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "用户钱包任务综合看板"
+metrics_view: m_user_wallet_task_metrics
+
+dimensions: "*"
+measures: "*"
+
+defaults:
+
+  time_range: P30D

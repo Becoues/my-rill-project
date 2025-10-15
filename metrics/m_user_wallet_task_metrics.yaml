@@ -1,0 +1,359 @@
+version: 1
+type: metrics_view
+
+display_name: User Wallet Task Metrics
+model: m_user_wallet_task
+timeseries: create_time
+
+dimensions:
+  # 钱包相关维度
+  - name: email
+    display_name: 邮箱
+    column: email
+
+  - name: wallet_id
+    display_name: 钱包ID
+    column: wallet_id
+
+  - name: wallet_type
+    display_name: 钱包类型
+    column: wallet_type
+
+  - name: wallet_sub_type
+    display_name: 钱包子类型
+    column: wallet_sub_type
+
+  - name: direction
+    display_name: 方向
+    column: direction
+
+  - name: txn_type
+    display_name: 交易类型
+    column: txn_type
+
+  - name: status
+    display_name: 交易状态
+    column: status
+
+
+  - name: domain
+    display_name: 域名
+    column: domain
+
+  # 任务相关维度
+  - name: task_id
+    display_name: 任务ID
+    column: task_id
+
+  - name: task_status
+    display_name: 任务状态
+    column: task_status
+
+  - name: task_type
+    display_name: 任务类型
+    column: task_type
+
+  - name: client_id
+    display_name: 客户ID
+    column: client_id
+  
+  - name: txn_id
+    display_name: 交易ID
+    column: txn_id
+
+  - name: model_version
+    display_name: 模型版本
+    column: model_version
+
+  - name: error_code
+    display_name: 错误代码
+    column: error_code
+
+  - name: sub_id
+    display_name: 订阅ID
+    column: sub_id
+
+  - name: task_email
+    display_name: 任务邮箱
+    column: task_email
+
+  - name: method_type
+    display_name: 方法类型
+    column: method_type
+    description: "api/lite/studio"
+
+  - name: pt
+    display_name: 分区日期
+    column: pt
+
+measures:
+  # ========== 基础统计指标 ==========
+  - name: total_transactions
+    display_name: 总交易数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: total_wallets
+    display_name: 钱包数
+    expression: COUNT(DISTINCT wallet_id)
+    format_preset: humanize
+
+  - name: total_users
+    display_name: 用户数
+    expression: COUNT(DISTINCT email)
+    format_preset: humanize
+
+  - name: total_domains
+    display_name: 域名数
+    expression: COUNT(DISTINCT domain)
+    format_preset: humanize
+
+  - name: total_tasks
+    display_name: 关联任务数
+    expression: COUNT(DISTINCT task_id)
+    format_preset: humanize
+
+  # ========== 点数相关指标 ==========
+  - name: total_amount
+    display_name: 总交易点数
+    expression: SUM(amount)
+    format_preset: currency
+
+  - name: avg_amount
+    display_name: 平均交易点数
+    expression: AVG(amount)
+    format_preset: currency
+
+  - name: max_amount
+    display_name: 最大交易点数
+    expression: MAX(amount)
+    format_preset: currency
+
+  - name: min_amount
+    display_name: 最小交易点数
+    expression: MIN(amount)
+    format_preset: currency
+
+  # ========== 交易状态指标 ==========
+  - name: completed_transactions
+    display_name: 完成交易数
+    expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: failed_transactions
+    display_name: 失败交易数
+    expression: SUM(CASE WHEN status IN ('失败', '取消', '过期') THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: pending_transactions
+    display_name: 待处理交易数
+    expression: SUM(CASE WHEN status = '待处理' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: success_rate
+    display_name: 交易成功率
+    expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0)
+    format_preset: percentage
+
+  # ========== 充值消费指标 ==========
+  - name: total_recharge_amount
+    display_name: 总充值点数
+    expression: SUM(CASE WHEN txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: total_consumption_amount
+    display_name: 总消费点数
+    expression: SUM(CASE WHEN txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: recharge_count
+    display_name: 充值次数
+    expression: SUM(CASE WHEN txn_type = '充值' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: consumption_count
+    display_name: 消费次数
+    expression: SUM(CASE WHEN txn_type = '消费' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: avg_recharge_amount
+    display_name: 平均充值点数
+    expression: AVG(CASE WHEN txn_type = '充值' AND status = '完成' THEN amount END)
+    format_preset: currency
+
+  - name: avg_consumption_amount
+    display_name: 平均消费点数
+    expression: AVG(CASE WHEN txn_type = '消费' AND status = '完成' THEN amount END)
+    format_preset: currency
+
+  # ========== 按钱包类型的指标 ==========
+  # API充值钱包
+  - name: api_wallet_consumption_amount
+    display_name: API充值钱包消费点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: api_wallet_recharge_amount
+    display_name: API充值钱包充值点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: api_wallet_transaction_count
+    display_name: API充值钱包交易数
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  # WEB免费钱包
+  - name: web_free_wallet_consumption_amount
+    display_name: WEB免费钱包消费点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: web_free_wallet_recharge_amount
+    display_name: WEB免费钱包充值点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: web_free_wallet_transaction_count
+    display_name: WEB免费钱包交易数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  # WEB订阅钱包
+  - name: web_subscription_wallet_consumption_amount
+    display_name: WEB订阅钱包消费点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: web_subscription_wallet_recharge_amount
+    display_name: WEB订阅钱包充值点数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: web_subscription_wallet_transaction_count
+    display_name: WEB订阅钱包交易数
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  # ========== 任务相关指标 ==========
+  - name: tasks_with_transaction
+    display_name: 有交易的任务数
+    expression: COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END)
+    format_preset: humanize
+
+  - name: successful_tasks
+    display_name: 成功任务数
+    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id END)
+    format_preset: humanize
+
+  - name: failed_tasks
+    display_name: 失败任务数
+    expression: COUNT(DISTINCT CASE WHEN task_status = 'failed' THEN task_id END)
+    format_preset: humanize
+
+  - name: task_success_rate
+    display_name: 任务成功率
+    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    format_preset: percentage
+
+  # ========== 时间相关指标 ==========
+  - name: avg_running_time
+    display_name: 平均运行时间(秒)
+    expression: AVG(running_time)
+    format_preset: humanize
+
+  - name: max_running_time
+    display_name: 最大运行时间(秒)
+    expression: MAX(running_time)
+    format_preset: humanize
+
+  - name: min_running_time
+    display_name: 最小运行时间(秒)
+    expression: MIN(running_time)
+    format_preset: humanize
+
+  - name: avg_pending_time
+    display_name: 平均等待时间(秒)
+    expression: AVG(pending_time)
+    format_preset: humanize
+
+  - name: max_pending_time
+    display_name: 最大等待时间(秒)
+    expression: MAX(pending_time)
+    format_preset: humanize
+
+  # ========== 按方法类型的指标 ==========
+  - name: api_method_transactions
+    display_name: API方法交易数
+    expression: SUM(CASE WHEN method_type = 'api' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: lite_method_transactions
+    display_name: Lite方法交易数
+    expression: SUM(CASE WHEN method_type = 'lite' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: studio_method_transactions
+    display_name: Studio方法交易数
+    expression: SUM(CASE WHEN method_type = 'studio' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: api_method_amount
+    display_name: API方法消费点数
+    expression: SUM(CASE WHEN method_type = 'api' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: lite_method_amount
+    display_name: Lite方法消费点数
+    expression: SUM(CASE WHEN method_type = 'lite' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  - name: studio_method_amount
+    display_name: Studio方法消费点数
+    expression: SUM(CASE WHEN method_type = 'studio' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    format_preset: currency
+
+  # ========== 错误分析指标 ==========
+  - name: tasks_with_errors
+    display_name: 有错误的任务数
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END)
+    format_preset: humanize
+
+  - name: error_rate
+    display_name: 任务错误率
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    format_preset: percentage
+
+  # ========== 用户价值指标 ==========
+  - name: avg_amount_per_user
+    display_name: 人均消费点数
+    expression: SUM(CASE WHEN txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END) / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: currency
+
+  - name: avg_transactions_per_user
+    display_name: 人均交易次数
+    expression: COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: humanize
+
+  - name: avg_tasks_per_user
+    display_name: 人均任务数
+    expression: COUNT(DISTINCT task_id) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: humanize
+
+  # ========== 模型版本指标 ==========
+  - name: unique_model_versions
+    display_name: 模型版本数
+    expression: COUNT(DISTINCT model_version)
+    format_preset: humanize
+
+  # ========== 订阅相关指标 ==========
+  - name: users_with_subscription
+    display_name: 有订阅的用户数
+    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END)
+    format_preset: humanize
+
+  - name: subscription_rate
+    display_name: 订阅用户比例
+    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END) * 100.0 / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: percentage
+
