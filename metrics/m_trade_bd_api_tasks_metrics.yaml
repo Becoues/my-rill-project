@@ -1,0 +1,193 @@
+version: 1
+type: metrics_view
+
+display_name: BD API任务指标
+model: m_trade_bd_api_task
+timeseries: create_time
+
+dimensions:
+  - name: 任务ID
+    display_name: 任务ID
+    column: task_id
+
+  - name: 任务状态
+    display_name: 任务状态
+    column: status
+
+  - name: 任务类型
+    display_name: 任务类型
+    column: type
+
+  - name: 客户ID
+    display_name: 客户ID
+    column: client_id
+
+  - name: 邮箱
+    display_name: 邮箱
+    column: email
+
+  - name: 域名
+    display_name: 域名
+    column: domain
+
+  - name: 模型版本
+    display_name: 模型版本
+    column: model_version
+
+  - name: 错误代码
+    display_name: 错误代码
+    column: error_code
+
+  - name: 错误信息
+    display_name: 错误信息
+    column: error_message
+
+  - name: 失败原因
+    display_name: 失败原因
+    column: fail_info
+
+  - name: 用户ID
+    display_name: 用户ID
+    column: sub_id
+
+  - name: 分区日期
+    display_name: 分区日期
+    column: pt
+
+measures:
+  - name: 总任务数
+    display_name: 总任务数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: 客户数
+    display_name: 客户数
+    expression: COUNT(DISTINCT client_id)
+    format_preset: humanize
+
+  - name: 邮箱数
+    display_name: 邮箱数
+    expression: COUNT(DISTINCT email)
+    format_preset: humanize
+
+  - name: 域名数
+    display_name: 域名数
+    expression: COUNT(DISTINCT domain)
+    format_preset: humanize
+
+  - name: 模型版本数
+    display_name: 模型版本数
+    expression: COUNT(DISTINCT model_version)
+    format_preset: humanize
+
+  - name: 用户数
+    display_name: 用户数
+    expression: COUNT(DISTINCT sub_id)
+    format_preset: humanize
+
+  # ===== 状态类指标 =====
+  - name: 成功任务数
+    display_name: 成功任务数
+    expression: SUM(CASE WHEN LOWER(status) IN ('success', 'succeeded', 'finished',
+      'done') THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: 失败任务数
+    display_name: 失败任务数
+    expression: SUM(CASE WHEN LOWER(status) IN ('failed', 'error', 'expired',
+      'cancelled', 'canceled') THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: 进行中任务数
+    display_name: 进行中任务数
+    expression: SUM(CASE WHEN LOWER(status) IN ('running', 'processing', 'queued')
+      THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: 成功率
+    display_name: 成功率
+    expression: SUM(CASE WHEN LOWER(status) IN ('success', 'succeeded', 'finished',
+      'done') THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)
+    format_preset: percentage
+
+  - name: 失败率
+    display_name: 失败率
+    expression: SUM(CASE WHEN LOWER(status) IN ('failed', 'error', 'expired',
+      'cancelled', 'canceled') THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)
+    format_preset: percentage
+
+  - name: 错误任务数
+    display_name: 错误任务数
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL OR fail_info IS NOT
+      NULL THEN task_id END)
+    format_preset: humanize
+
+  - name: 错误率
+    display_name: 错误率
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL OR fail_info IS NOT
+      NULL THEN task_id END) * 1.0 / NULLIF(COUNT(DISTINCT task_id), 0)
+    format_preset: percentage
+
+  # ===== 时间效率类指标 =====
+  - name: 平均运行时间
+    display_name: 平均运行时间（秒）
+    expression: AVG(running_time)
+    format_preset: humanize
+
+  - name: 中位运行时间
+    display_name: 中位运行时间（秒）
+    expression: QUANTILE_CONT(running_time, 0.5)
+    format_preset: humanize
+
+  - name: 最大运行时间
+    display_name: 最大运行时间（秒）
+    expression: MAX(running_time)
+    format_preset: humanize
+
+  - name: 平均等待时间
+    display_name: 平均等待时间（秒）
+    expression: AVG(pending_time)
+    format_preset: humanize
+
+  - name: 最大等待时间
+    display_name: 最大等待时间（秒）
+    expression: MAX(pending_time)
+    format_preset: humanize
+
+  - name: 延迟任务数
+    display_name: 延迟任务数
+    expression: COUNT(CASE WHEN pending_time IS NOT NULL AND pending_time > 0 THEN 1 END)
+    format_preset: humanize
+
+  # ===== 用户与模型表现 =====
+  - name: 每客户任务数
+    display_name: 每客户任务数
+    expression: COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT client_id), 0)
+    format_preset: humanize
+
+  - name: 每用户任务数
+    display_name: 每用户任务数
+    expression: COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT sub_id), 0)
+    format_preset: humanize
+
+  - name: 模型失败任务数
+    display_name: 模型失败任务数
+    expression: SUM(CASE WHEN error_code IS NOT NULL THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: 模型失败率
+    display_name: 模型失败率
+    expression: SUM(CASE WHEN error_code IS NOT NULL THEN 1 ELSE 0 END) * 1.0 /
+      NULLIF(COUNT(*), 0)
+    format_preset: percentage
+
+  # ===== 维度覆盖 =====
+  - name: 客户覆盖率
+    display_name: 客户覆盖率
+    expression: COUNT(DISTINCT client_id) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: percentage
+
+  - name: 域名覆盖率
+    display_name: 域名覆盖率
+    expression: COUNT(DISTINCT domain) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
+    format_preset: percentage

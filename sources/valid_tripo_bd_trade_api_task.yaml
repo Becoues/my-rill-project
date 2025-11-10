@@ -1,0 +1,25 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 16 * * *'
+sql: |
+  SELECT
+    task_id,
+    status,
+    type,
+    client_id,
+    CAST(create_time AS timestamp(3)) AS create_time,
+    email,
+    CAST(start_time AS timestamp(3)) AS start_time,
+    SPLIT_PART(email, '@', 2) AS domain,
+    running_time,
+    pending_time,
+    model_version,
+    error_code,
+    error_message,
+    fail_info,
+    pt,
+    sub_id
+  FROM silver.valid_tripo_bd_trade_api_task
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)

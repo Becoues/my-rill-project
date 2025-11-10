@@ -70,7 +70,7 @@ dimensions:
     column: error_code
 
   - name: sub_id
-    display_name: 订阅ID
+    display_name: 用户ID
     column: sub_id
 
   - name: task_email
@@ -152,7 +152,7 @@ measures:
 
   - name: success_rate
     display_name: 交易成功率
-    expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0)
+    expression: SUM(CASE WHEN status = '完成' THEN 1 ELSE 0 END)  / NULLIF(COUNT(*), 0)
     format_preset: percentage
 
   # ========== 充值消费指标 ==========
@@ -211,7 +211,7 @@ measures:
 
   - name: web_free_wallet_recharge_amount
     display_name: WEB免费钱包充值点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND  (txn_type = '充值' or txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_free_wallet_transaction_count
@@ -227,7 +227,7 @@ measures:
 
   - name: web_subscription_wallet_recharge_amount
     display_name: WEB订阅钱包充值点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND (txn_type = '充值' or txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_subscription_wallet_transaction_count
@@ -253,7 +253,7 @@ measures:
 
   - name: task_success_rate
     display_name: 任务成功率
-    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id END)  / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
     format_preset: percentage
 
   # ========== 时间相关指标 ==========
@@ -321,7 +321,7 @@ measures:
 
   - name: error_rate
     display_name: 任务错误率
-    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END)  / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
     format_preset: percentage
 
   # ========== 用户价值指标 ==========
@@ -354,6 +354,6 @@ measures:
 
   - name: subscription_rate
     display_name: 订阅用户比例
-    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END) * 100.0 / NULLIF(COUNT(DISTINCT email), 0)
+    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END)  / NULLIF(COUNT(DISTINCT email), 0)
     format_preset: percentage
 

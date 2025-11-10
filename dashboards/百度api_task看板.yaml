@@ -1,0 +1,11 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "百度api_task看板"
+metrics_view: m_trade_bd_api_tasks_metrics
+
+
+dimensions: "*"
+measures: "*"

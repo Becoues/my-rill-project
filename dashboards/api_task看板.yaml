@@ -7,19 +7,8 @@ display_name: "API Tasks 看板"
 metrics_view: m_trade_api_tasks_metrics
 
 dimensions: '*'
-measures: '*'
+measures: "*"
 defaults:
-  measures:
-    - total_tasks
-    - total_clients
-    - total_emails
-    - total_domains
-    - total_count
-    - avg_running_time
-    - max_running_time
-    - avg_pending_time
-    - max_pending_time
-    - success_rate
   dimensions:
     - client_id
     - name
