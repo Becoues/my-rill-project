@@ -1,0 +1,38 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "百度wallet明细看板"
+metrics_view: m_trade_bd_txn_wallet_metrics
+
+dimensions: '*'
+measures: '*'
+defaults:
+  measures:
+    - total_transactions
+    - total_wallets
+    - total_emails
+    - total_domains
+    - total_amount
+    - avg_amount
+    - completed_transactions
+    - failed_transactions
+    - api_wallet_consumption_amount
+    - api_wallet_recharge_amount
+    - web_free_wallet_consumption_amount
+    - web_free_wallet_recharge_amount
+    - web_subscription_wallet_consumption_amount
+    - web_subscription_wallet_recharge_amount
+  dimensions:
+    - txn_id
+    - wallet_id
+    - wallet_type
+    - wallet_sub_type
+    - direction
+    - type
+    - status
+    - email
+    - domain
+    - pt
+  time_range: P14D

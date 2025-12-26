@@ -1,0 +1,29 @@
+type: explore
+
+display_name: "aws邀请看板"
+metrics_view: m_traffic_invitation_metrics
+
+dimensions: "*"
+measures: "*"
+
+defaults:
+  measures:
+    - 邀请用户数
+    - 邀请人用户数
+    - 邀请码数
+    - 邀请人付费激励积分总额
+    - 邀请人代际激励积分总额
+    - 被邀请人代际激励积分总额
+    - 平均每次邀请人付费激励
+    - KOL邀请数
+    - KOL邀请占比
+    - 每邀请码邀请用户数
+  dimensions:
+    - 邀请码
+    - 邀请人用户ID
+    - 邀请人邮箱
+    - 被邀请人用户ID
+    - 被邀请人邮箱
+    - 是否KOL
+    - 分区日期
+  time_range: P30D

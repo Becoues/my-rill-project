@@ -19,7 +19,7 @@ sql: |
     type,
     status,
     pt,
-    CAST(updated_at AS timestamp(3)) as updated_at
-  FROM silver.valid_tripo_trade_txn_wallet
+    (CAST(updated_at AS timestamp(3))- INTERVAL '8' HOUR) as updated_at
+  FROM silver.valid_tripo_bd_trade_txn_wallet
       WHERE cast(date_parse(pt,'%Y%m%d')as date)  >= DATE_ADD('month', -12, CURRENT_DATE)
 

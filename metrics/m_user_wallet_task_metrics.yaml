@@ -3,7 +3,7 @@ type: metrics_view
 
 display_name: User Wallet Task Metrics
 model: m_user_wallet_task
-timeseries: create_time
+timeseries: settle_time
 
 dimensions:
   # 钱包相关维度
@@ -35,7 +35,6 @@ dimensions:
     display_name: 交易状态
     column: status
 
-
   - name: domain
     display_name: 域名
     column: domain
@@ -56,7 +55,7 @@ dimensions:
   - name: client_id
     display_name: 客户ID
     column: client_id
-  
+
   - name: txn_id
     display_name: 交易ID
     column: txn_id
@@ -190,12 +189,14 @@ measures:
   # API充值钱包
   - name: api_wallet_consumption_amount
     display_name: API充值钱包消费点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '消费' AND
+      status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: api_wallet_recharge_amount
     display_name: API充值钱包充值点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '充值' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'API充值钱包' AND txn_type = '充值' AND
+      status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: api_wallet_transaction_count
@@ -206,12 +207,14 @@ measures:
   # WEB免费钱包
   - name: web_free_wallet_consumption_amount
     display_name: WEB免费钱包消费点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND txn_type = '消费' AND
+      status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_free_wallet_recharge_amount
     display_name: WEB免费钱包充值点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND  (txn_type = '充值' or txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB免费钱包' AND  (txn_type = '充值' or
+      txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_free_wallet_transaction_count
@@ -222,12 +225,14 @@ measures:
   # WEB订阅钱包
   - name: web_subscription_wallet_consumption_amount
     display_name: WEB订阅钱包消费点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND txn_type = '消费' AND
+      status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_subscription_wallet_recharge_amount
     display_name: WEB订阅钱包充值点数
-    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND (txn_type = '充值' or txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN wallet_sub_type = 'WEB订阅钱包' AND (txn_type = '充值' or
+      txn_type = '重置') AND status = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: web_subscription_wallet_transaction_count
@@ -253,7 +258,9 @@ measures:
 
   - name: task_success_rate
     display_name: 任务成功率
-    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id END)  / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    expression: COUNT(DISTINCT CASE WHEN task_status = 'success' THEN task_id
+      END)  / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id
+      END), 0)
     format_preset: percentage
 
   # ========== 时间相关指标 ==========
@@ -300,17 +307,20 @@ measures:
 
   - name: api_method_amount
     display_name: API方法消费点数
-    expression: SUM(CASE WHEN method_type = 'api' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN method_type = 'api' AND txn_type = '消费' AND status =
+      '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: lite_method_amount
     display_name: Lite方法消费点数
-    expression: SUM(CASE WHEN method_type = 'lite' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN method_type = 'lite' AND txn_type = '消费' AND status =
+      '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   - name: studio_method_amount
     display_name: Studio方法消费点数
-    expression: SUM(CASE WHEN method_type = 'studio' AND txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END)
+    expression: SUM(CASE WHEN method_type = 'studio' AND txn_type = '消费' AND status
+      = '完成' THEN amount ELSE 0 END)
     format_preset: currency
 
   # ========== 错误分析指标 ==========
@@ -321,13 +331,15 @@ measures:
 
   - name: error_rate
     display_name: 任务错误率
-    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END)  / NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
+    expression: COUNT(DISTINCT CASE WHEN error_code IS NOT NULL THEN task_id END)  /
+      NULLIF(COUNT(DISTINCT CASE WHEN task_id IS NOT NULL THEN task_id END), 0)
     format_preset: percentage
 
   # ========== 用户价值指标 ==========
   - name: avg_amount_per_user
     display_name: 人均消费点数
-    expression: SUM(CASE WHEN txn_type = '消费' AND status = '完成' THEN amount ELSE 0 END) / NULLIF(COUNT(DISTINCT email), 0)
+    expression: SUM(CASE WHEN txn_type = '消费' AND status = '完成' THEN amount ELSE 0
+      END) / NULLIF(COUNT(DISTINCT email), 0)
     format_preset: currency
 
   - name: avg_transactions_per_user
@@ -354,6 +366,6 @@ measures:
 
   - name: subscription_rate
     display_name: 订阅用户比例
-    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END)  / NULLIF(COUNT(DISTINCT email), 0)
+    expression: COUNT(DISTINCT CASE WHEN sub_id IS NOT NULL THEN email END)  /
+      NULLIF(COUNT(DISTINCT email), 0)
     format_preset: percentage
-

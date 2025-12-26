@@ -1,0 +1,42 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 16 * * *'
+sql: |
+  SELECT
+    id,
+
+    -- 被邀请人
+    invitee_sub_id,
+    invitee_email,
+
+    -- 邀请人
+    invitor_sub_id,
+    invitor_email,
+
+    -- 邀请码
+    invite_code,
+
+    -- 邀请规则 & 条件
+    get_member_condition,
+    register_generation_limit,
+
+    -- 收益相关
+    invitee_benefit_by_payment,
+    invitor_benefit_by_payment,
+    invitee_benefit_by_generation,
+    invitor_benefit_by_generation,
+
+    -- KOL 标识
+    is_kol,
+
+    -- 时间（北京时间）
+    (CAST(create_time AS timestamp(3))- INTERVAL '8' HOUR) AS create_time,
+    (CAST(update_time AS timestamp(3))- INTERVAL '8' HOUR) AS update_time,
+
+    -- 分区
+    pt
+  FROM silver.valid_traffic_invitation_relation
+  WHERE cast(date_parse(pt, '%Y%m%d') as date)
+        >= DATE_ADD('month', -12, CURRENT_DATE)

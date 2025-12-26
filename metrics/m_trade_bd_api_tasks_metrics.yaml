@@ -75,16 +75,6 @@ measures:
     expression: COUNT(DISTINCT domain)
     format_preset: humanize
 
-  - name: 模型版本数
-    display_name: 模型版本数
-    expression: COUNT(DISTINCT model_version)
-    format_preset: humanize
-
-  - name: 用户数
-    display_name: 用户数
-    expression: COUNT(DISTINCT sub_id)
-    format_preset: humanize
-
   # ===== 状态类指标 =====
   - name: 成功任务数
     display_name: 成功任务数
@@ -96,12 +86,6 @@ measures:
     display_name: 失败任务数
     expression: SUM(CASE WHEN LOWER(status) IN ('failed', 'error', 'expired',
       'cancelled', 'canceled') THEN 1 ELSE 0 END)
-    format_preset: humanize
-
-  - name: 进行中任务数
-    display_name: 进行中任务数
-    expression: SUM(CASE WHEN LOWER(status) IN ('running', 'processing', 'queued')
-      THEN 1 ELSE 0 END)
     format_preset: humanize
 
   - name: 成功率
@@ -154,8 +138,8 @@ measures:
     expression: MAX(pending_time)
     format_preset: humanize
 
-  - name: 延迟任务数
-    display_name: 延迟任务数
+  - name: 有pending任务数
+    display_name: 有pending任务数
     expression: COUNT(CASE WHEN pending_time IS NOT NULL AND pending_time > 0 THEN 1 END)
     format_preset: humanize
 
@@ -179,15 +163,4 @@ measures:
     display_name: 模型失败率
     expression: SUM(CASE WHEN error_code IS NOT NULL THEN 1 ELSE 0 END) * 1.0 /
       NULLIF(COUNT(*), 0)
-    format_preset: percentage
-
-  # ===== 维度覆盖 =====
-  - name: 客户覆盖率
-    display_name: 客户覆盖率
-    expression: COUNT(DISTINCT client_id) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
-    format_preset: percentage
-
-  - name: 域名覆盖率
-    display_name: 域名覆盖率
-    expression: COUNT(DISTINCT domain) * 1.0 / NULLIF(COUNT(DISTINCT email), 0)
     format_preset: percentage

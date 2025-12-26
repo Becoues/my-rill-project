@@ -2,7 +2,7 @@ version: 1
 type: metrics_view
 
 display_name: Transaction Wallet Metrics
-model: m_trade_txn_wallet
+model: m_trade_bd_txn_wallet
 timeseries: settle_time
 
 dimensions:

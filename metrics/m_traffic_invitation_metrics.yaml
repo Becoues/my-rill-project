@@ -1,0 +1,97 @@
+version: 1
+type: metrics_view
+
+display_name: 邀请关系指标
+model: m_invitation
+timeseries: create_time
+
+dimensions:
+  - name: 邀请码
+    display_name: 邀请码
+    column: invite_code
+
+  - name: 邀请人用户ID
+    display_name: 邀请人用户ID
+    column: invitor_sub_id
+
+  - name: 邀请人邮箱
+    display_name: 邀请人邮箱
+    column: invitor_email
+
+  - name: 被邀请人用户ID
+    display_name: 被邀请人用户ID
+    column: invitee_sub_id
+
+  - name: 被邀请人邮箱
+    display_name: 被邀请人邮箱
+    column: invitee_email
+
+  - name: 是否KOL
+    display_name: 是否KOL
+    column: is_kol
+
+  - name: 分区日期
+    display_name: 分区日期
+    column: pt
+
+measures:
+  # ===== 邀请规模 =====
+  - name: 邀请用户数
+    display_name: 邀请用户数
+    expression: COUNT(DISTINCT invitee_sub_id)
+    format_preset: humanize
+
+  - name: 邀请人用户数
+    display_name: 邀请人用户数
+    expression: COUNT(DISTINCT invitor_sub_id)
+    format_preset: humanize
+
+  - name: 邀请码数
+    display_name: 邀请码数
+    expression: COUNT(DISTINCT invite_code)
+    format_preset: humanize
+
+
+  # ===== 激励参数（潜在收益）=====
+  - name: 邀请人付费激励积分总额
+    display_name: 邀请人付费激励积分总额
+    expression: SUM(invitor_benefit_by_payment)
+    format_preset: humanize
+
+  - name: 邀请人代际激励积分总额
+    display_name: 邀请人代际激励积分总额
+    expression: SUM(invitor_benefit_by_generation)
+    format_preset: humanize
+
+  - name: 被邀请人代际激励积分总额
+    display_name: 被邀请人代际激励积分总额
+    expression: SUM(invitee_benefit_by_generation)
+    format_preset: humanize
+
+
+  # ===== 激励强度（平均）=====
+  - name: 平均每次邀请人付费激励
+    display_name: 平均每次邀请人付费激励
+    expression: AVG(invitor_benefit_by_payment)
+    format_preset: humanize
+
+
+  # ===== KOL 视角 =====
+  - name: KOL邀请数
+    display_name: KOL邀请数
+    expression: SUM(CASE WHEN is_kol = 1 THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: KOL邀请占比
+    display_name: KOL邀请占比
+    expression: |
+      SUM(CASE WHEN is_kol = 1 THEN 1 ELSE 0 END) * 1.0
+      / NULLIF(COUNT(*), 0)
+    format_preset: percentage
+
+
+  # ===== 效率 =====
+  - name: 每邀请码邀请用户数
+    display_name: 每邀请码邀请用户数
+    expression: COUNT(DISTINCT invitee_sub_id) * 1.0 / NULLIF(COUNT(DISTINCT invite_code), 0)
+    format_preset: humanize

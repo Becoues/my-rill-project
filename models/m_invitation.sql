@@ -1,0 +1,1 @@
+SELECT * FROM valid_traffic_invitation_relation
