@@ -45,6 +45,8 @@ dimensions:
   - name: pt
     display_name: PT
     column: pt
+  - column: create_time
+    name: create_time
 
 measures:
   - name: total_transactions

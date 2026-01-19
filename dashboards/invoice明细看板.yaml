@@ -1,0 +1,46 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "Invoice Detail Metrics dashboard"
+metrics_view: m_trade_invoice_detail_metrics
+
+dimensions: '*'
+measures: '*'
+defaults:
+  measures:
+    - total_invoices
+    - unique_customers
+    - unique_subscriptions
+    - total_charge_amount
+    - total_amount_paid
+    - total_fee
+    - total_net
+    - total_refunded_amount
+    - total_net_after_refund
+    - paid_invoices
+    - unpaid_invoices
+    - payment_success_rate
+    - refunded_invoices
+    - refund_rate
+    - disputed_invoices
+    - total_dispute_usd
+    - total_net_after_dispute
+  dimensions:
+    - invoice_id
+    - customer_id
+    - subscription_id
+    - stripe_email
+    - backend_email
+    - domain
+    - product_name
+    - sub_product_name
+    - status
+    - paid
+    - billing_reason
+    - payment_method_type
+    - card_brand
+    - currency
+    - pt
+  time_range: P14D

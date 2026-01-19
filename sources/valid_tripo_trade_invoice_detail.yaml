@@ -1,0 +1,81 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 16 * * *'
+sql: |
+  SELECT
+    -- 分区 & 主键
+    pt,
+    invoice_line_item_id,
+
+    -- 关联键
+    invoice_id,
+    subscription_id,
+    charge_id,
+    customer_id,
+    sub_id,
+
+    -- 邮箱信息
+    stripe_email,
+    backend_email,
+    SPLIT_PART(COALESCE(backend_email, stripe_email), '@', 2) AS domain,
+
+    -- 产品 & 描述
+    price_id,
+    product_name,
+    sub_product_name,
+    description,
+    quantity,
+
+    -- 支付方式
+    payment_method_type,
+    card_brand,
+    card_funding,
+    card_country,
+    card_network,
+    card_name,
+    receipt_email,
+
+    -- 金额（以 charge 为准）
+    charge_amount,
+    invoice_subtotal,
+    invoice_total,
+    invoice_amount_paid,
+    invoice_amount_due,
+    invoice_amount_remaining,
+    amount_refunded,
+    is_total_refunded,
+    currency,
+    fee_usd,
+    net_usd,
+
+    -- 退款
+    refund_usd,
+    net_usd_after_refund,
+
+    -- 争议
+    dispute_id,
+    dispute_usd,
+    net_usd_after_refund_dispute,
+
+    -- 状态 & 时间（转换为北京时间）
+    status,
+    paid,
+    billing_reason,
+    collection_method,
+    (CAST(invoice_created_at AS timestamp(3)) - INTERVAL '8' HOUR) AS invoice_created_at,
+    (CAST(period_start AS timestamp(3)) - INTERVAL '8' HOUR) AS period_start,
+    (CAST(period_end AS timestamp(3)) - INTERVAL '8' HOUR) AS period_end,
+
+    -- 折扣
+    discount_id,
+    promotion_code,
+    discount_value_type,
+    discount_amount_off,
+    discount_percent_off,
+
+    (CAST(updated_at AS timestamp(3)) - INTERVAL '8' HOUR) AS updated_at
+
+  FROM silver.valid_tripo_trade_invoice_detail
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)

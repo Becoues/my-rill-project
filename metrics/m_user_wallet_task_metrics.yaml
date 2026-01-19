@@ -84,6 +84,12 @@ dimensions:
   - name: pt
     display_name: 分区日期
     column: pt
+  - column: create_time
+    name: create_time
+    display_name: 记录创建时间
+  - column: reason
+    name: reason
+    display_name: 原因
 
 measures:
   # ========== 基础统计指标 ==========

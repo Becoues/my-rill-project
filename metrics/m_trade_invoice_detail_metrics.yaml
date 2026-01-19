@@ -1,0 +1,259 @@
+version: 1
+type: metrics_view
+
+display_name: Invoice Detail Metrics
+model: m_trade_invoice_detail
+timeseries: invoice_created_at
+
+dimensions:
+  - name: invoice_line_item_id
+    display_name: Invoice Line Item ID
+    column: invoice_line_item_id
+
+  - name: invoice_id
+    display_name: Invoice ID
+    column: invoice_id
+
+  - name: subscription_id
+    display_name: Subscription ID
+    column: subscription_id
+
+  - name: charge_id
+    display_name: Charge ID
+    column: charge_id
+
+  - name: customer_id
+    display_name: Customer ID
+    column: customer_id
+
+  - name: sub_id
+    display_name: Sub ID
+    column: sub_id
+
+  - name: stripe_email
+    display_name: Stripe Email
+    column: stripe_email
+
+  - name: backend_email
+    display_name: Backend Email
+    column: backend_email
+
+  - name: domain
+    display_name: Domain
+    column: domain
+
+  - name: product_name
+    display_name: Product Name
+    column: product_name
+
+  - name: sub_product_name
+    display_name: Sub Product Name
+    column: sub_product_name
+
+  - name: price_id
+    display_name: Price ID
+    column: price_id
+
+  - name: description
+    display_name: Description
+    column: description
+
+  - name: payment_method_type
+    display_name: Payment Method Type
+    column: payment_method_type
+
+  - name: card_brand
+    display_name: Card Brand
+    column: card_brand
+
+  - name: card_funding
+    display_name: Card Funding
+    column: card_funding
+
+  - name: card_country
+    display_name: Card Country
+    column: card_country
+
+  - name: card_network
+    display_name: Card Network
+    column: card_network
+
+  - name: currency
+    display_name: Currency
+    column: currency
+
+  - name: status
+    display_name: Status
+    column: status
+
+  - name: paid
+    display_name: Paid
+    column: paid
+
+  - name: billing_reason
+    display_name: Billing Reason
+    column: billing_reason
+
+  - name: collection_method
+    display_name: Collection Method
+    column: collection_method
+
+  - name: is_total_refunded
+    display_name: Is Total Refunded
+    column: is_total_refunded
+
+  - name: discount_value_type
+    display_name: Discount Value Type
+    column: discount_value_type
+
+  - name: promotion_code
+    display_name: Promotion Code
+    column: promotion_code
+
+  - name: pt
+    display_name: PT
+    column: pt
+
+  - column: period_start
+    name: period_start
+
+  - column: period_end
+    name: period_end
+
+measures:
+  # 基础计数
+  - name: total_invoices
+    display_name: 总发票数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: unique_customers
+    display_name: 客户数
+    expression: COUNT(DISTINCT customer_id)
+    format_preset: humanize
+
+  - name: unique_subscriptions
+    display_name: 订阅数
+    expression: COUNT(DISTINCT subscription_id)
+    format_preset: humanize
+
+  - name: unique_domains
+    display_name: 域名数
+    expression: COUNT(DISTINCT domain)
+    format_preset: humanize
+
+  # 金额相关
+  - name: total_charge_amount
+    display_name: 总充值金额(USD)
+    expression: SUM(charge_amount) / 100
+    format_preset: currency
+
+  - name: total_invoice_amount
+    display_name: 总发票金额(USD)
+    expression: SUM(invoice_total) / 100
+    format_preset: currency
+
+  - name: total_amount_paid
+    display_name: 总已支付金额(USD)
+    expression: SUM(invoice_amount_paid) / 100
+    format_preset: currency
+
+  - name: total_amount_due
+    display_name: 总应付金额(USD)
+    expression: SUM(invoice_amount_due) / 100
+    format_preset: currency
+
+  - name: total_fee
+    display_name: 总手续费(USD)
+    expression: SUM(fee_usd) / 100
+    format_preset: currency
+
+  - name: total_net
+    display_name: 总净收入(USD)
+    expression: SUM(net_usd) / 100
+    format_preset: currency
+
+  - name: avg_charge_amount
+    display_name: 平均充值金额(USD)
+    expression: AVG(charge_amount) / 100
+    format_preset: currency
+
+  # 退款相关
+  - name: total_refunded_amount
+    display_name: 总退款金额(USD)
+    expression: SUM(amount_refunded) / 100
+    format_preset: currency
+
+  - name: total_refund_usd
+    display_name: 总退款净额(USD)
+    expression: SUM(refund_usd) / 100
+    format_preset: currency
+
+  - name: total_net_after_refund
+    display_name: 退款后净收入(USD)
+    expression: SUM(net_usd_after_refund) / 100
+    format_preset: currency
+
+  - name: refunded_invoices
+    display_name: 退款发票数
+    expression: SUM(CASE WHEN is_total_refunded = true THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: refund_rate
+    display_name: 退款率(%)
+    expression: (SUM(CASE WHEN is_total_refunded = true THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0))
+    format_preset: percentage
+
+  # 争议相关
+  - name: total_dispute_usd
+    display_name: 总争议金额(USD)
+    expression: SUM(dispute_usd) / 100
+    format_preset: currency
+
+  - name: total_net_after_dispute
+    display_name: 争议后净收入(USD)
+    expression: SUM(net_usd_after_refund_dispute) / 100
+    format_preset: currency
+
+  - name: disputed_invoices
+    display_name: 争议发票数
+    expression: COUNT(DISTINCT CASE WHEN dispute_id IS NOT NULL THEN invoice_line_item_id END)
+    format_preset: humanize
+
+  # 支付状态
+  - name: paid_invoices
+    display_name: 已支付发票数
+    expression: SUM(CASE WHEN paid = true THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: unpaid_invoices
+    display_name: 未支付发票数
+    expression: SUM(CASE WHEN paid = false THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: payment_success_rate
+    display_name: 支付成功率(%)
+    expression: (SUM(CASE WHEN paid = true THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0))
+    format_preset: percentage
+
+  # 折扣相关
+  - name: discounted_invoices
+    display_name: 使用折扣发票数
+    expression: COUNT(DISTINCT CASE WHEN discount_id IS NOT NULL THEN invoice_line_item_id END)
+    format_preset: humanize
+
+  - name: total_discount_amount_off
+    display_name: 总折扣金额(USD)
+    expression: SUM(discount_amount_off) / 100
+    format_preset: currency
+
+  # 产品相关
+  - name: total_quantity
+    display_name: 总产品数量
+    expression: SUM(quantity)
+    format_preset: humanize
+
+  - name: avg_quantity
+    display_name: 平均产品数量
+    expression: AVG(quantity)
+    format_preset: humanize
