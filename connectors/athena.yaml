@@ -7,4 +7,4 @@ driver: athena
 aws_access_key_id: "{{ .env.connector.athena.aws_access_key_id }}"
 aws_secret_access_key: "{{ .env.connector.athena.aws_secret_access_key }}"
 output_location: "s3://tripo-telescope/athena_rill/"
-workgroup: tripo-analyst
+workgroup: primary
