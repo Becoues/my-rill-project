@@ -2,7 +2,7 @@ type: model
 materialize: true
 connector: athena
 refresh:
-  cron: '0 16 * * *'
+  cron: '0 2 * * *'
 sql: |
   SELECT
     -- 分区 & 主键

@@ -2,7 +2,7 @@ type: model
 materialize: true
 connector: athena
 refresh:
-  cron: '0 16 * * *'
+  cron: '0 2 * * *'
 sql: |
   SELECT
     -- 钱包侧字段
@@ -43,4 +43,3 @@ sql: |
     reason
   FROM gold.tripo_trade_user_wallet_task
   WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)
-
