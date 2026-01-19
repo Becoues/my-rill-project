@@ -1,9 +1,7 @@
-# Connector YAML
-# Reference documentation: https://docs.rilldata.com/reference/project-files/connectors
-  
 type: connector
 
 driver: athena
 aws_access_key_id: "{{ .env.connector.athena.aws_access_key_id }}"
 aws_secret_access_key: "{{ .env.connector.athena.aws_secret_access_key }}"
-workgroup: primary
+output_location: "s3://tripo-telescope/athena_rill/"
+workgroup: tripo-analyst
