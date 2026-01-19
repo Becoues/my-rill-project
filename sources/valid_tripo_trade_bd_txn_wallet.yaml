@@ -2,7 +2,7 @@ type: model
 materialize: true
 connector: athena
 refresh:
-  cron: '0 16 * * *'    
+  cron: '0 2 * * *'
 sql: |
   SELECT 
     txn_id,
@@ -22,4 +22,3 @@ sql: |
     (CAST(updated_at AS timestamp(3))- INTERVAL '8' HOUR) as updated_at
   FROM silver.valid_tripo_bd_trade_txn_wallet
       WHERE cast(date_parse(pt,'%Y%m%d')as date)  >= DATE_ADD('month', -12, CURRENT_DATE)
-
