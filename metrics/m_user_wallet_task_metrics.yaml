@@ -52,6 +52,10 @@ dimensions:
     display_name: 任务类型
     column: task_type
 
+  - name: task_create_time
+    display_name: 任务创建时间
+    column: task_create_time
+
   - name: client_id
     display_name: 客户ID
     column: client_id
