@@ -1,0 +1,21 @@
+# Explore YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/explore-dashboards
+
+type: explore
+
+display_name: "算法指标看板"
+metrics_view: m_task_index_detail_metrics
+
+dimensions: "*"
+measures: "*"
+
+defaults:
+  dimensions:
+    - create_date
+    - method_type
+    - task_status
+    - task_type
+    - model_version
+    - error_code
+    - pt
+  time_range: P30D

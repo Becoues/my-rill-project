@@ -1,0 +1,28 @@
+type: model
+materialize: true
+connector: athena
+refresh:
+  cron: '0 2 * * *'
+sql: |
+  SELECT
+    COALESCE(task_id, operator_id) AS task_id,
+    task_status,
+    task_type,
+    (CAST(create_time AS timestamp(3)) - INTERVAL '8' HOUR) AS create_time,
+    CAST((CAST(create_time AS timestamp(3)) - INTERVAL '8' HOUR) AS date) AS create_date,
+    (CAST(start_time AS timestamp(3)) - INTERVAL '8' HOUR) AS start_time,
+    (CAST(end_time AS timestamp(3)) - INTERVAL '8' HOUR) AS end_time,
+    CASE WHEN running_time < 0 THEN 0 ELSE running_time END AS running_time,
+    CASE WHEN pending_time < 0 THEN 0 ELSE pending_time END AS pending_time,
+    model_version,
+    error_code,
+    error_message,
+    fail_info,
+    sub_id,
+    email,
+    method_type,
+    est_running_time,
+    pt,
+    (CAST(updated_at AS timestamp(3)) - INTERVAL '8' HOUR) AS updated_at
+  FROM silver.valid_tripo_task_index_detail
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)

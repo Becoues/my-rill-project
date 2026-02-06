@@ -1,0 +1,141 @@
+version: 1
+type: metrics_view
+
+display_name: Task Index Detail Metrics
+model: m_task_index_detail
+timeseries: create_time
+
+dimensions:
+  - name: task_id
+    display_name: 任务ID
+    column: task_id
+
+  - name: task_status
+    display_name: 任务状态
+    column: task_status
+
+  - name: task_type
+    display_name: 任务类型
+    column: task_type
+
+  - name: create_date
+    display_name: 创建日期
+    column: create_date
+
+  - name: method_type
+    display_name: 任务渠道
+    column: method_type
+
+  - name: model_version
+    display_name: 模型版本
+    column: model_version
+
+  - name: error_code
+    display_name: 错误代码
+    column: error_code
+
+  - name: error_message
+    display_name: 错误信息
+    column: error_message
+
+  - name: fail_info
+    display_name: 失败详情
+    column: fail_info
+
+  - name: sub_id
+    display_name: 用户订阅ID
+    column: sub_id
+
+  - name: email
+    display_name: 用户邮箱
+    column: email
+
+  - name: pt
+    display_name: 分区日期
+    column: pt
+
+measures:
+  - name: total_tasks
+    display_name: 总任务数
+    expression: COUNT(*)
+    format_preset: humanize
+
+  - name: success_tasks
+    display_name: 成功任务数
+    expression: SUM(CASE WHEN task_status = 'success' THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: non_success_tasks
+    display_name: 未成功任务数
+    expression: SUM(CASE WHEN task_status <> 'success' OR task_status IS NULL THEN 1 ELSE 0 END)
+    format_preset: humanize
+
+  - name: total_users
+    display_name: 用户数
+    expression: COUNT(DISTINCT email)
+    format_preset: humanize
+
+  - name: total_subs
+    display_name: 订阅数
+    expression: COUNT(DISTINCT sub_id)
+    format_preset: humanize
+
+  - name: avg_running_time
+    display_name: 平均运行时间(秒)
+    expression: AVG(running_time)
+    format_preset: humanize
+
+  - name: min_running_time
+    display_name: 最小运行时间(秒)
+    expression: MIN(running_time)
+    format_preset: humanize
+
+  - name: max_running_time
+    display_name: 最大运行时间(秒)
+    expression: MAX(running_time)
+    format_preset: humanize
+
+  - name: avg_pending_time
+    display_name: 平均排队时间(秒)
+    expression: AVG(pending_time)
+    format_preset: humanize
+
+  - name: min_pending_time
+    display_name: 最小排队时间(秒)
+    expression: MIN(pending_time)
+    format_preset: humanize
+
+  - name: max_pending_time
+    display_name: 最大排队时间(秒)
+    expression: MAX(pending_time)
+    format_preset: humanize
+
+  - name: avg_est_running_time
+    display_name: 平均预估运行时间(秒)
+    expression: AVG(est_running_time)
+    format_preset: humanize
+
+  - name: min_est_running_time
+    display_name: 最小预估运行时间(秒)
+    expression: MIN(est_running_time)
+    format_preset: humanize
+
+  - name: max_est_running_time
+    display_name: 最大预估运行时间(秒)
+    expression: MAX(est_running_time)
+    format_preset: humanize
+
+  - name: avg_total_time
+    display_name: 平均总耗时(秒)
+    expression: AVG(running_time + pending_time)
+    format_preset: humanize
+
+  - name: max_total_time
+    display_name: 最大总耗时(秒)
+    expression: MAX(running_time + pending_time)
+    format_preset: humanize
+
+  - name: success_rate
+    display_name: 成功率
+    expression: SUM(CASE WHEN task_status = 'success' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0)
+    format_preset: percentage
