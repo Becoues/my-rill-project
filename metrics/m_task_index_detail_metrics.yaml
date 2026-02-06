@@ -85,14 +85,29 @@ measures:
     expression: AVG(running_time)
     format_preset: humanize
 
-  - name: min_running_time
-    display_name: 最小运行时间(秒)
-    expression: MIN(running_time)
+  - name: p50_running_time
+    display_name: 运行时间中位数(秒)
+    expression: QUANTILE_CONT(running_time, 0.5)
     format_preset: humanize
 
-  - name: max_running_time
-    display_name: 最大运行时间(秒)
-    expression: MAX(running_time)
+  - name: p75_running_time
+    display_name: 运行时间P75(秒)
+    expression: QUANTILE_CONT(running_time, 0.75)
+    format_preset: humanize
+
+  - name: p90_running_time
+    display_name: 运行时间P90(秒)
+    expression: QUANTILE_CONT(running_time, 0.9)
+    format_preset: humanize
+
+  - name: p95_running_time
+    display_name: 运行时间P95(秒)
+    expression: QUANTILE_CONT(running_time, 0.95)
+    format_preset: humanize
+
+  - name: p99_running_time
+    display_name: 运行时间P99(秒)
+    expression: QUANTILE_CONT(running_time, 0.99)
     format_preset: humanize
 
   - name: avg_pending_time
@@ -100,14 +115,29 @@ measures:
     expression: AVG(pending_time)
     format_preset: humanize
 
-  - name: min_pending_time
-    display_name: 最小排队时间(秒)
-    expression: MIN(pending_time)
+  - name: p50_pending_time
+    display_name: 排队时间中位数(秒)
+    expression: QUANTILE_CONT(pending_time, 0.5)
     format_preset: humanize
 
-  - name: max_pending_time
-    display_name: 最大排队时间(秒)
-    expression: MAX(pending_time)
+  - name: p75_pending_time
+    display_name: 排队时间P75(秒)
+    expression: QUANTILE_CONT(pending_time, 0.75)
+    format_preset: humanize
+
+  - name: p90_pending_time
+    display_name: 排队时间P90(秒)
+    expression: QUANTILE_CONT(pending_time, 0.9)
+    format_preset: humanize
+
+  - name: p95_pending_time
+    display_name: 排队时间P95(秒)
+    expression: QUANTILE_CONT(pending_time, 0.95)
+    format_preset: humanize
+
+  - name: p99_pending_time
+    display_name: 排队时间P99(秒)
+    expression: QUANTILE_CONT(pending_time, 0.99)
     format_preset: humanize
 
   - name: avg_est_running_time
@@ -115,14 +145,29 @@ measures:
     expression: AVG(est_running_time)
     format_preset: humanize
 
-  - name: min_est_running_time
-    display_name: 最小预估运行时间(秒)
-    expression: MIN(est_running_time)
+  - name: p50_est_running_time
+    display_name: 预估运行时间中位数(秒)
+    expression: QUANTILE_CONT(est_running_time, 0.5)
     format_preset: humanize
 
-  - name: max_est_running_time
-    display_name: 最大预估运行时间(秒)
-    expression: MAX(est_running_time)
+  - name: p75_est_running_time
+    display_name: 预估运行时间P75(秒)
+    expression: QUANTILE_CONT(est_running_time, 0.75)
+    format_preset: humanize
+
+  - name: p90_est_running_time
+    display_name: 预估运行时间P90(秒)
+    expression: QUANTILE_CONT(est_running_time, 0.9)
+    format_preset: humanize
+
+  - name: p95_est_running_time
+    display_name: 预估运行时间P95(秒)
+    expression: QUANTILE_CONT(est_running_time, 0.95)
+    format_preset: humanize
+
+  - name: p99_est_running_time
+    display_name: 预估运行时间P99(秒)
+    expression: QUANTILE_CONT(est_running_time, 0.99)
     format_preset: humanize
 
   - name: avg_total_time
@@ -130,9 +175,29 @@ measures:
     expression: AVG(running_time + pending_time)
     format_preset: humanize
 
-  - name: max_total_time
-    display_name: 最大总耗时(秒)
-    expression: MAX(running_time + pending_time)
+  - name: p50_total_time
+    display_name: 总耗时中位数(秒)
+    expression: QUANTILE_CONT(running_time + pending_time, 0.5)
+    format_preset: humanize
+
+  - name: p75_total_time
+    display_name: 总耗时P75(秒)
+    expression: QUANTILE_CONT(running_time + pending_time, 0.75)
+    format_preset: humanize
+
+  - name: p90_total_time
+    display_name: 总耗时P90(秒)
+    expression: QUANTILE_CONT(running_time + pending_time, 0.9)
+    format_preset: humanize
+
+  - name: p95_total_time
+    display_name: 总耗时P95(秒)
+    expression: QUANTILE_CONT(running_time + pending_time, 0.95)
+    format_preset: humanize
+
+  - name: p99_total_time
+    display_name: 总耗时P99(秒)
+    expression: QUANTILE_CONT(running_time + pending_time, 0.99)
     format_preset: humanize
 
   - name: success_rate
