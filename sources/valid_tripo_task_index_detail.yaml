@@ -5,7 +5,7 @@ refresh:
   cron: '0 2 * * *'
 sql: |
   SELECT
-    COALESCE(task_id, operator_id) AS task_id,
+    task_id AS task_id,
     task_status,
     task_type,
     (CAST(create_time AS timestamp(3)) - INTERVAL '8' HOUR) AS create_time,
