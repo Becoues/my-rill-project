@@ -39,4 +39,4 @@ sql: |
     pt
   FROM silver.valid_traffic_invitation_relation
   WHERE cast(date_parse(pt, '%Y%m%d') as date)
-        >= DATE_ADD('month', -12, CURRENT_DATE)
+        >= DATE_ADD('month', -6, CURRENT_DATE)

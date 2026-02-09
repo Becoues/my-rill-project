@@ -23,4 +23,4 @@ sql: |
     pt,
     sub_id
   FROM silver.valid_tripo_trade_api_task
-  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -6, CURRENT_DATE)

@@ -78,4 +78,4 @@ sql: |
     (CAST(updated_at AS timestamp(3)) - INTERVAL '8' HOUR) AS updated_at
 
   FROM silver.valid_tripo_trade_invoice_detail
-  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -12, CURRENT_DATE)
+  WHERE CAST(DATE_PARSE(pt, '%Y%m%d') AS DATE) >= DATE_ADD('month', -6, CURRENT_DATE)
